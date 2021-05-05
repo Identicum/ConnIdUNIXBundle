@@ -41,7 +41,7 @@ public class General {
     		
     		getentCommand.append(" | sed -n '");
     		getentCommand.append(offset);
-    		getentCommand.append(",+");
+    		getentCommand.append(",");
     		getentCommand.append(options.getPageSize() != 0 ? options.getPageSize()-1 : options.getPageSize());
     		getentCommand.append("p'");
     	}
