@@ -20,14 +20,14 @@ import org.identityconnectors.framework.common.objects.OperationOptions;
 public class General {
 
     public static String getentPasswdFile(OperationOptions options) {
-    	StringBuilder getentCommand = new StringBuilder("/usr/local/bin/getent passwd");
+    	StringBuilder getentCommand = new StringBuilder("getent passwd");
  
     	appendPaging(options, getentCommand);
         return getentCommand.toString();
     }
     
     public static String getentGroupFile(OperationOptions options) {
-    	StringBuilder getentCommand = new StringBuilder("/usr/local/bin/getent group");
+    	StringBuilder getentCommand = new StringBuilder("getent group");
     	appendPaging(options, getentCommand);
         return getentCommand.toString();
     }
@@ -48,16 +48,16 @@ public class General {
     }
     
     public static String searchUserIntoPasswdFile(final String username) {
-        return "/usr/local/bin/getent passwd " + username;
+        return "getent passwd " + username;
     }
 
     public static String searchGroupIntoGroupFile(String groupname) {
-        return "/usr/local/bin/getent group "+ groupname;
+        return "getent group "+ groupname;
     }
 
     //shadow
     public static String searchUserStatusIntoShadowFile(final String username) {
-        return "/usr/local/bin/getent shadow " + username;
+        return "getent shadow " + username;
     }
     
     public static String searchGroupsForUser(final String username) {
