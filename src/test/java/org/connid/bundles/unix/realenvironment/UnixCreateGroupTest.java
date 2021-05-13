@@ -75,7 +75,7 @@ public class UnixCreateGroupTest extends SharedTestMethods {
     public final void createGroupWithPermissions() {
         
         Set<Attribute> attributes = createSetOfAttributes(name, attrs.getPassword(), true);
-        StringBuilder permissions = new StringBuilder("HOST=(ALL) NOPASSWD: /usr/sbin/useradd,/usr/sbin/usermod,/usr/sbin/userdel,/usr/sbin/groupadd,/usr/sbin/groupmod,/usr/sbin/groupdel,/bin/mv,/usr/bin/passwd,/usr/bin/getent,/bin/echo,/usr/bin/tee,/bin/chown,/bin/chmod,/bin/mkdir,/usr/bin/groups,/usr/bin/id,/usr/bin/replace,/bin/rm,/bin/sudo");
+        StringBuilder permissions = new StringBuilder("HOST=(ALL) NOPASSWD: /usr/sbin/useradd,/usr/sbin/usermod,/usr/sbin/userdel,/usr/sbin/groupadd,/usr/sbin/groupmod,/usr/sbin/groupdel,/bin/mv,/usr/bin/passwd,/usr/local/bin/getent,/bin/echo,/usr/bin/tee,/bin/chown,/bin/chmod,/bin/mkdir,/usr/bin/groups,/usr/bin/id,/usr/bin/replace,/bin/rm,/bin/sudo");
 
 		attributes.add(AttributeBuilder.build(SchemaGroupAttribute.PERMISSIONS.getName(), permissions.toString()));
 		
