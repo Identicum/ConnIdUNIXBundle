@@ -82,9 +82,7 @@ public class Search {
 		} else if (objectClass.equals(ObjectClass.GROUP)) {
 			GroupFile groupFile = searchAllGroups();
 			fillGroupHandler(groupFile.getGroupRows());
-
 		}
-
 	}
 
 	public void equalSearch() throws IOException, InterruptedException, JSchException {
@@ -98,22 +96,23 @@ public class Search {
 			GroupFile groupFile = (filter.isUid() ? searchGroupByUid() : searchAllGroups());
 			fillGroupHandler(groupFile.searchRowByAttribute(filter.getAttributeName(), filter.getAttributeValue(),
 					filter.isNot()));
-
 		}
 	}
 
 	private PasswdFile searchUserByUid() throws JSchException, IOException {
-		UnixResult result = unixConnection
-				.executeRead(UnixConnector.getCommandGenerator().userExists(filter.getAttributeValue()));
+		String commandToExecute = UnixConnector.getCommandGenerator().userExists(filter.getAttributeValue());
+		LOG.ok("searchUserByUid() - UNIX command to execute: " + commandToExecute);
+		UnixResult result = unixConnection.executeRead(UnixConnector.getCommandGenerator().userExists(filter.getAttributeValue()));
+		LOG.ok("searchUserByUid() - Result: " + result.getOutput());
 		result.checkResult(Operation.GETENET, "Search failed", LOG);
 		PasswdFile passwdFile = new PasswdFile(getFileOutput(result.getOutput()));
 		return passwdFile;
-
 	}
 
 	private PasswdFile searchAllUsers() throws JSchException, IOException {
-
-		UnixResult result = unixConnection.executeRead(UnixConnector.getCommandGenerator().searchAllUser(options));
+		String commandToExecute = UnixConnector.getCommandGenerator().searchAllUser(options);
+		LOG.ok("UNIX command to execute: " + commandToExecute);
+		UnixResult result = unixConnection.executeRead(commandToExecute);
 		result.checkResult(Operation.GETENET, "Search failed", LOG);
 		PasswdFile passwdFile = new PasswdFile(getFileOutput(result.getOutput()));
 		return passwdFile;
@@ -225,8 +224,8 @@ public class Search {
 											UnixConnector.getCommandGenerator().userGroups(passwdRow.getUsername()))
 									.getOutput())));
 
-			String shadowInfo = unixConnection
-					.executeRead(UnixConnector.getCommandGenerator().userStatus(passwdRow.getUsername())).getOutput();
+			String shadowInfo = unixConnection.executeRead(UnixConnector.getCommandGenerator().userStatus(passwdRow.getUsername())).getOutput();
+			LOG.ok("shadowInfo: {0}", shadowInfo);
 			if (StringUtil.isNotBlank(shadowInfo)) {
 				String[] shadowAttrs = shadowInfo.split(":", 9);
 				bld.addAttribute(OperationalAttributes.LOCK_OUT_NAME,
@@ -248,8 +247,7 @@ public class Search {
 					.executeRead(UnixConnector.getCommandGenerator().userPermissions(passwdRow.getUsername()))
 					.getOutput();
 			if (StringUtil.isNotBlank(userPermissions)) {
-				String evaluated = EvaluateCommandsResultOutput.evaluatePermissions(passwdRow.getUsername(),
-						userPermissions);
+				String evaluated = EvaluateCommandsResultOutput.evaluatePermissions(passwdRow.getUsername(),userPermissions);
 				LOG.ok("Evaluated permissions: {0}", evaluated);
 				if (!evaluated.contains("No such file or directory")) {
 					bld.addAttribute(SchemaAccountAttribute.PERMISIONS.getName(), evaluated);

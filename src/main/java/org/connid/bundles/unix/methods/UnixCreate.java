@@ -86,13 +86,10 @@ public class UnixCreate {
 			StringBuilder commandToExecute = new StringBuilder();
 			String addCommand = UnixConnector.getCommandGenerator().createUser(objectName, attrs);
 			UnixCommon.appendCommand(commandToExecute, addCommand);
-			
 			UnixCommon.appendCreateOrUpdatePublicKeyCommand(commandToExecute, objectName, attrs, false);
-			
 			UnixCommon.appendCreateOrUpdatePermissions(commandToExecute, objectName, attrs, true);
-			
+			LOG.ok("UNIX command to execute: " + commandToExecute.toString());
 			UnixResult result= unixConnection.execute(commandToExecute.toString());
-			
 			result.checkResult(Operation.USERADD, "Could not create user", LOG);
 
 			UnixCommon.processPassword(unixConnection, objectName, attrs);
@@ -102,13 +99,11 @@ public class UnixCreate {
 			StringBuilder commandToExecute = new StringBuilder();
 			String addCommand = UnixConnector.getCommandGenerator().createGroup(objectName, attrs);
 			UnixCommon.appendCommand(commandToExecute, addCommand);
-			
 			UnixCommon.appendCreateOrUpdatePermissions(commandToExecute, objectName, attrs, false);
-			
+			LOG.ok("UNIX command to execute: " + commandToExecute.toString());
 			UnixResult result = unixConnection.execute(commandToExecute.toString());
 			result.checkResult(Operation.GROUPADD, "Could not create group", LOG);
 		}
-		
 
 		return new Uid(objectName);
 	}
@@ -118,6 +113,7 @@ public class UnixCreate {
 		UnixCommon.appendCommand(activationCommand, UnixCommon.buildActivationCommand(unixConnection, username, attrs));
 		UnixCommon.appendCommand(activationCommand, UnixCommon.buildLockoutCommand(unixConnection, username, attrs));
 		if (StringUtil.isNotBlank(activationCommand.toString())){
+			LOG.ok("UNIX command to execute: " + activationCommand.toString());
 			UnixResult result = unixConnection.execute(activationCommand.toString());
 			result.checkResult(Operation.USERMOD, "Could not change user activation status", LOG);
 		}
